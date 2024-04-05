@@ -2,36 +2,32 @@ import { useDispatch, useSelector } from 'react-redux';
 import ContactForm from './components/ContactForm';
 import SearchBox from './components/SearchBox';
 import ContactList from './components/ContactList';
-import { addContact, deleteContact } from './redux/contactsSlice';
-import { changeFilter } from './redux/filtersSlice';
-import initialContacts from './contacts.json';
+import { fetchContacts, addContact, deleteContact } from './redux/contactsOps';
 import { useEffect } from 'react';
+import { changeFilter, selectFilteredContacts } from './redux/filtersSlice';
 import './App.css';
 
 function App() {
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts.items);
   const filter = useSelector(state => state.filters.name);
 
   useEffect(() => {
-    initialContacts.forEach(contact => dispatch(addContact({ ...contact, id: Date.now() }))); 
+    dispatch(fetchContacts());
   }, [dispatch]);
 
   const handleAddContact = newContact => {
-    dispatch(addContact({ ...newContact, id: Date.now() }));
+    dispatch(addContact(newContact));
   };
 
   const handleDeleteContact = contactId => {
     dispatch(deleteContact(contactId));
   };
 
+  const filteredContacts = useSelector(state => selectFilteredContacts(state)); 
+
   const handleSearch = value => {
     dispatch(changeFilter(value));
   };
-
-  const filteredContacts = contacts.filter(contact =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
-  );
 
   return (
     <div>
@@ -44,4 +40,3 @@ function App() {
 }
 
 export default App;
-
