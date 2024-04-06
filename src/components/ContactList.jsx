@@ -4,15 +4,13 @@ import { useDispatch } from 'react-redux';
 import { deleteContact, selectFilteredContacts } from '../redux/contactsSlice'; 
 
 function ContactList() {
-  const contacts = useSelector(state => state.contacts.items);
-  const filter = useSelector(state => state.filters.name); 
+  const filteredContacts = useSelector(selectFilteredContacts );
+
   const dispatch = useDispatch();
 
   const handleDelete = contactId => {
     dispatch(deleteContact(contactId));
   };
-
-  const filteredContacts = selectFilteredContacts(contacts, filter);
   
   return (
     <ul>
